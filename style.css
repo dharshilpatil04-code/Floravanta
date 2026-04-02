@@ -1,0 +1,1224 @@
+/* 
+   Floravanta 
+   Aesthetic visual identity: white, light green, subtle pink.
+*/
+
+:root {
+    --color-bg: #fffbfb; /* Very subtle warm white/pink hint */
+    --color-text: #2f3531; /* Deep organic dark green/grey instead of harsh black */
+    --color-text-light: #5d6860;
+    --color-accent-pink: #fdf5f5; /* For very subtle background tints if needed */
+    --color-accent-green: #e9f0e9;
+
+    --font-sans: 'Outfit', sans-serif;
+    --font-serif: 'Cormorant Garamond', serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    /* Soften the scrollbar for webkit */
+}
+
+body::-webkit-scrollbar {
+    width: 6px;
+}
+body::-webkit-scrollbar-track {
+    background: transparent;
+}
+body::-webkit-scrollbar-thumb {
+    background: #e0e0e0;
+    border-radius: 10px;
+}
+
+h1, h2, h3, p {
+    margin: 0;
+}
+
+/* ==================
+   Landing Section
+=================== */
+.landing {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    background-color: #f7f7f7; /* Soft neutral background */
+}
+
+.parallax-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#hero-wrapper {
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.parallax-image {
+    position: absolute;
+    top: -5%;
+    left: -5%;
+    width: 110%;
+    height: 110%;
+    object-fit: cover;
+    object-position: center;
+    animation: breathing 10s ease-in-out infinite alternate;
+}
+
+@keyframes breathing {
+    from { transform: scale(1); }
+    to { transform: scale(1.05); }
+}
+
+/* Base layer remains grayscale */
+.grayscale-layer {
+    filter: grayscale(100%);
+}
+
+/* Top layer is colored but masked to the spotlight */
+.color-layer {
+    opacity: 0;
+    /* Extra large radius, highly softened transparent boundaries */
+    mask-image: radial-gradient(circle 35vw at var(--spot-x, 50%) var(--spot-y, 50%), rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%);
+    -webkit-mask-image: radial-gradient(circle 35vw at var(--spot-x, 50%) var(--spot-y, 50%), rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%);
+    transition: opacity 1.5s ease 0.5s; /* 0.5s delay before the smooth 1.5s fade out */
+    pointer-events: none;
+}
+
+.color-layer.active {
+    opacity: 1;
+    transition: opacity 0.8s ease 0s; /* Immediate smooth blooming fade in */
+}
+
+.landing-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(47, 53, 49, 0.15) 0%, rgba(47, 53, 49, 0.45) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.landing-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+#landing-title {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    letter-spacing: 0.18em;
+    margin-bottom: 1rem;
+    color: #fcfcfc;
+}
+
+.char {
+    opacity: 0;
+    display: inline-block;
+    transform: translateY(10px);
+    transition: opacity 1.5s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.char.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.tagline {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1rem, 2.5vw, 1.8rem);
+    letter-spacing: 0.15em;
+    color: rgba(252, 252, 252, 0.9);
+    opacity: 0;
+}
+
+.tagline.visible {
+    animation: fadeUp 2s ease 1.5s forwards;
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 5vh;
+    font-size: 0.85rem;
+    font-family: var(--font-sans);
+    color: rgba(252, 252, 252, 0.8);
+    letter-spacing: 0.15em;
+    opacity: 0;
+    transition: opacity 1s ease;
+    animation: float 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.scroll-indicator.visible {
+    opacity: 0.8;
+}
+
+.scroll-indicator.hidden-on-scroll {
+    opacity: 0 !important;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(12px); }
+}
+
+/* ==================
+   Transition Blend
+=================== */
+.transition-blend {
+    height: 40vh;
+    width: 100%;
+    /* Soft fade: top -> transparent, bottom -> black */
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000 100%);
+    position: relative;
+    z-index: 5;
+    pointer-events: none;
+    margin-bottom: -1px; /* seamless connection to video-sequence */
+}
+
+/* ==================
+   Video Sequence
+=================== */
+.video-sequence {
+    height: 350vh; /* Adds scroll depth to scrub the video fluidly */
+    width: 100%;
+    background-color: #000;
+}
+
+.video-sticky {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#scroll-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* ==================
+   Immersive Parallax Gallery (Forest Theme)
+=================== */
+.gallery-transition-blend {
+    height: 40vh; /* Lengthened for a luxurious slow fade */
+    width: 100%;
+    /* Soft cinematic gradient: slightly light/transparent -> deep shadow -> dark forest green */
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 251, 251, 0.05) 0%,
+        rgba(6, 9, 6, 0.2) 40%,
+        rgba(6, 9, 6, 0.8) 75%,
+        #060906 100%
+    );
+    position: relative;
+    z-index: 5;
+    pointer-events: none;
+    margin-bottom: -1px;
+}
+
+.immersive-gallery {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 15vh 0 25vh;
+    width: 100%;
+    overflow: hidden; 
+    background-color: #060906; /* Deep forest dark */
+}
+
+/* Forest texture background */
+.immersive-gallery::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url('images/forest-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: blur(4px) saturate(0.6);
+    opacity: 0.25; 
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Atmospheric grain overlay */
+.immersive-gallery::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    mix-blend-mode: overlay;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Environmental Fauna (JS-driven) */
+.fauna-container {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1;
+    pointer-events: none; /* Base container ignores pointers, items capture them */
+    overflow: hidden;
+}
+
+.fauna-item {
+    position: absolute;
+    pointer-events: auto;
+    cursor: default;
+    /* Smooth CSS translation for slow wandering, overridden by JS */
+    transition: transform 12s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 2s ease, filter 2s ease;
+    will-change: transform, opacity;
+    opacity: 0;
+}
+
+/* Inner element for the sine wave bobbing */
+.fauna-inner {
+    width: 100%;
+    height: 100%;
+    animation: faunaBob 4s ease-in-out infinite alternate;
+}
+
+/* Wing fluttering on the SVG itself */
+.fauna-svg-bird {
+    animation: birdFlutter 0.3s ease-in-out infinite alternate;
+    transform-origin: center;
+}
+.fauna-svg-butterfly {
+    animation: butterflyFlutter 0.8s ease-in-out infinite alternate;
+    transform-origin: center;
+}
+
+/* Slight variance in bobbing speeds */
+.fauna-bob-1 .fauna-inner { animation-duration: 3.5s; }
+.fauna-bob-2 .fauna-inner { animation-duration: 4.5s; }
+.fauna-bob-3 .fauna-inner { animation-duration: 5.5s; }
+
+@keyframes faunaBob {
+    0% { transform: translateY(-8px) rotate(-3deg); }
+    100% { transform: translateY(8px) rotate(3deg); }
+}
+
+@keyframes birdFlutter {
+    0% { transform: scaleY(1) translateY(0); }
+    100% { transform: scaleY(0.7) translateY(-3px); }
+}
+
+@keyframes butterflyFlutter {
+    0% { transform: scaleX(1); }
+    100% { transform: scaleX(0.3); }
+}
+
+/* Interactive Escape Class */
+.fauna-item.escape {
+    transition: transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 1.5s ease;
+    opacity: 0 !important;
+}
+
+.gallery-wrapper {
+    position: relative;
+    z-index: 2; /* Above backgrounds */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Core central column focus */
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+    .gallery-wrapper {
+        gap: 12vh; /* Clean vertical stack space on mobile */
+    }
+}
+
+.gallery-figure {
+    position: relative;
+    margin: 0;
+    cursor: pointer;
+    will-change: transform, opacity;
+    /* Composite transform combining entry, parallax and base */
+    --entry-y: 120px;
+    --entry-s: 0.95;
+    transform: translateY(calc(var(--entry-y) + var(--parallax-y, 0px))) scale(var(--entry-s));
+    
+    transition: filter 0.6s ease;
+}
+
+/* Purely cinematic rising entry for gallery */
+.gallery-figure.js-gallery-animate {
+    opacity: 0;
+    transition: opacity 2.5s cubic-bezier(0.2, 0.8, 0.2, 1), transform 2.5s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.6s ease;
+}
+
+.gallery-figure.js-gallery-animate.is-visible {
+    opacity: 1;
+    --entry-y: 0px;
+    --entry-s: 1;
+}
+
+/* Parent dimming when wrapper is hovered */
+.gallery-wrapper:hover .gallery-figure {
+    filter: brightness(0.4) blur(3px); /* Others dim/blur */
+}
+.gallery-wrapper:hover .gallery-figure:hover {
+    filter: brightness(1) blur(0px); /* The hovered one stays clear */
+    z-index: 10;
+}
+
+.gallery-item-inner {
+    position: relative;
+    /* Soft continuous floating */
+    animation: idleFloat 8s ease-in-out infinite alternate;
+}
+
+/* Stagger floating slightly so they don't all sync */
+.pos-1 .gallery-item-inner { animation-delay: 0s; }
+.pos-2 .gallery-item-inner { animation-delay: -2s; }
+.pos-3 .gallery-item-inner { animation-delay: -4s; }
+.pos-4 .gallery-item-inner { animation-delay: -1s; }
+.pos-5 .gallery-item-inner { animation-delay: -6s; }
+.pos-6 .gallery-item-inner { animation-delay: -3s; }
+.pos-7 .gallery-item-inner { animation-delay: -5s; }
+.pos-8 .gallery-item-inner { animation-delay: -7s; }
+
+@keyframes idleFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-15px); }
+}
+
+.gallery-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 85vw;
+    border-radius: 4px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    
+    filter: grayscale(0.5) contrast(0.95);
+    transition: filter 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.8s ease;
+}
+
+/* Soft Info Overlay */
+.gallery-hover-info {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    right: 2rem;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    pointer-events: none;
+    text-align: left;
+}
+
+.flower-name {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 1.2rem;
+    letter-spacing: 0.15em;
+    color: #fff;
+    margin-bottom: 0.4rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.flower-desc {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    max-width: 80%;
+}
+
+/* Highly intentional drifting wave layout (Desktop only) */
+@media (min-width: 768px) {
+    /* 1. bloom: slightly left */
+    .pos-1 {
+        transform: translateX(-10vw) rotate(-1.5deg) translateY(calc(var(--entry-y) + var(--parallax-y, 0px))) scale(var(--entry-s));
+        margin-top: 5vh;
+    }
+    .pos-1 .gallery-img { max-width: 480px; }
+
+    /* 2. alive: right */
+    .pos-2 {
+        transform: translateX(15vw) rotate(2deg) translateY(calc(var(--entry-y) + var(--parallax-y, 0px))) scale(var(--entry-s));
+        margin-top: -5vh; /* Tuck it closer */
+    }
+    .pos-2 .gallery-img { max-width: 400px; }
+
+    /* 3. warmth: center focal */
+    .pos-3 {
+        transform: translateX(2vw) rotate(-0.5deg) translateY(calc(var(--entry-y) + var(--parallax-y, 0px))) scale(var(--entry-s));
+        margin-top: 5vh;
+    }
+    .pos-3 .gallery-img { max-width: 600px; }
+
+    /* 4. becoming: left (more) sweeping */
+    .pos-4 {
+        transform: translateX(-18vw) rotate(-2.5deg) translateY(calc(var(--entry-y) + var(--parallax-y, 0px))) scale(var(--entry-s));
+        margin-top: 8vh;
+    }
+    .pos-4 .gallery-img { max-width: 420px; }
+
+    /* 5. between: center largest focal pause */
+    .pos-5 {
+        transform: translateX(0) rotate(0) translateY(calc(var(--entry-y) + var(--parallax-y, 0px))) scale(var(--entry-s));
+        margin-top: 15vh;
+        margin-bottom: 12vh;
+    }
+    .pos-5 .gallery-img { max-width: 850px; }
+
+    /* 6. quiet: right recovery sweep */
+    .pos-6 {
+        transform: translateX(12vw) rotate(1.5deg) translateY(calc(var(--entry-y) + var(--parallax-y, 0px))) scale(var(--entry-s));
+        margin-top: 5vh;
+    }
+    .pos-6 .gallery-img { max-width: 480px; }
+
+    /* 7. stillness: slightly left */
+    .pos-7 {
+        transform: translateX(-8vw) rotate(-1deg) translateY(calc(var(--entry-y) + var(--parallax-y, 0px))) scale(var(--entry-s));
+        margin-top: 2vh;
+    }
+    .pos-7 .gallery-img { max-width: 500px; }
+
+    /* 8. linger: center anchor */
+    .pos-8 {
+        transform: translateX(0) rotate(0.5deg) translateY(calc(var(--entry-y) + var(--parallax-y, 0px))) scale(var(--entry-s));
+        margin-top: 10vh;
+    }
+    .pos-8 .gallery-img { max-width: 560px; }
+}
+
+/* Image Hover interaction for pointers */
+@media (hover: hover) and (pointer: fine) {
+    .gallery-figure:hover .gallery-img {
+        filter: grayscale(0) contrast(1.05);
+        transform: scale(1.04); /* Subtle, elegant scale */
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6); /* Deep atmospheric shadow */
+    }
+    
+    .gallery-figure:hover .gallery-hover-info {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Tap state instead of hover for touch screens */
+@media (max-width: 767px) {
+    .gallery-hover-info {
+        opacity: 1; /* Always mostly visible on touch */
+        transform: translateY(0);
+        background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+        bottom: 0; left: 0; right: 0;
+        padding: 2rem 1.5rem 1rem;
+        border-radius: 0 0 4px 4px;
+    }
+    .flower-name { font-size: 1rem; }
+    .flower-desc { font-size: 0.9rem; max-width: 100%; }
+
+    .gallery-img {
+        max-width: 85vw;
+    }
+    
+    .gallery-figure:active .gallery-img {
+        filter: grayscale(0) contrast(1);
+        transform: scale(1.02);
+    }
+}
+
+/* ==================
+   Custom Bird Cursor
+=================== */
+/* Hide the default cursor when entering the cinematic forest */
+.has-custom-cursor {
+    cursor: none;
+}
+.has-custom-cursor * {
+    /* Enforce hidden cursor across all children except where interactive overrides specifically need testing */
+    cursor: none !important; 
+}
+
+.custom-bird-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 85px; /* Significantly larger but still refined (approx 2.5x) */
+    height: 85px;
+    pointer-events: none; /* Prevents cursor from intercepting clicks */
+    z-index: 9999;
+    opacity: 0;
+    transform-origin: center center;
+    transition: opacity 0.4s ease;
+    mix-blend-mode: normal;
+    will-change: transform;
+}
+
+.custom-bird-cursor.is-visible {
+    opacity: 1;
+}
+
+.cursor-bird-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+    transition: transform 0.4s ease;
+    /* Move center to cursor point */
+    transform: translate(-50%, -50%);
+}
+
+.cursor-bird-img.is-focused {
+    /* An elegant visual shift when hovering over a gallery image */
+    transform: translate(-50%, -50%) scale(0.85);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+}
+
+
+/* ==================
+   Lightbox overlay
+=================== */
+.lightbox-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(6, 8, 6, 0.85); /* Dark */
+    backdrop-filter: blur(15px); /* Strong cinematic blur */
+    -webkit-backdrop-filter: blur(15px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.lightbox-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 2rem;
+    right: 2.5rem;
+    background: none;
+    border: none;
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: color 0.3s ease;
+    z-index: 2010;
+}
+
+.lightbox-close:hover {
+    color: #fff;
+}
+
+.lightbox-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+.lightbox-img {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    transform: scale(0.97);
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.lightbox-overlay.is-open .lightbox-img {
+    transform: scale(1);
+}
+
+.lightbox-caption {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 0.15em;
+    margin-top: 1.5rem;
+}
+
+/* ==================
+   Footer
+=================== */
+.footer {
+    height: 35vh; /* Lots of breathing space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.8rem; /* Balanced spacing */
+    background-color: transparent;
+    border-top: 1px solid rgba(47, 53, 49, 0.03); /* Extremely subtle border */
+}
+
+.footer-title {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.8rem; /* Small */
+    letter-spacing: 0.25em; /* Letter-spaced */
+    text-transform: lowercase;
+    color: #949c96; /* Soft gray */
+}
+
+.footer-icons {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start; /* align icons by top instead of center */
+    justify-content: center;
+}
+
+.social-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    width: 160px; /* Equal width forces icons to balance perfectly across the center */
+}
+
+.social-link {
+    transition: transform 0.4s ease, color 0.4s ease, filter 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+
+.social-link:hover {
+    transform: scale(1.12); /* Slight scale up */
+}
+
+/* Glow / brightness effects on hover */
+.social-ig:hover {
+    filter: drop-shadow(0 4px 10px rgba(188, 24, 136, 0.35)) brightness(1.15);
+}
+
+.social-email:hover {
+    filter: drop-shadow(0 4px 10px rgba(103, 147, 228, 0.35)) brightness(1.15);
+}
+
+.social-handle {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: #a4aca6;
+    opacity: 0.55;
+    white-space: nowrap;
+}
+
+/* ==================
+   Animations
+=================== */
+.js-animate {
+    opacity: 0;
+    transform: translateY(60px);
+    transition: opacity 2s cubic-bezier(0.2, 0.8, 0.2, 1), transform 2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.js-animate.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Specific purely cinematic rising entry for gallery cleaned up, handles vars directly on the entry above */
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==================
+   Cinematic Forest Section
+=================== */
+.cinematic-forest-section {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    padding: 15vh 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('images/forest-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    /* Keeps the image still while scrolling for a depth effect */
+    background-attachment: fixed;
+    overflow: hidden;
+}
+
+.forest-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(6, 9, 6, 0.85); /* Deep dark overlay */
+    z-index: 1;
+}
+
+.linear-grid-container {
+    position: relative;
+    z-index: 2; /* Above the dark overlay */
+    width: 90%;
+    max-width: 1400px; /* clean and wide */
+    margin: 0 auto;
+    display: flex;       /* Explicitly distinct columns side-by-side */
+    flex-direction: row;
+    gap: 3vw;
+    align-items: flex-start; /* Do NOT stretch columns to match heights */
+}
+
+/* Base column structure */
+.gallery-column {
+    display: flex;
+    flex-direction: column;
+    gap: 3vw;         /* Consistent vertical spacing */
+    flex: 1;          /* Equal width columns */
+    min-width: 0;     /* Prevent overflowing flex items */
+}
+
+/* Vertical offsets between columns */
+@media (min-width: 993px) {
+    .gallery-column.column-1 { margin-top: 5vh; }
+    .gallery-column.column-2 { margin-top: 15vh; }
+    .gallery-column.column-3 { margin-top: 0vh; }
+}
+
+/* Enforce organic varying aspect ratios to absolutely guarantee no row overlaps */
+@media (min-width: 577px) {
+    .gallery-column.column-1 .grid-item:nth-child(even) .grid-img { aspect-ratio: 4/5; }
+    .gallery-column.column-1 .grid-item:nth-child(odd) .grid-img { aspect-ratio: 5/4; }
+    .gallery-column.column-2 .grid-item:nth-child(even) .grid-img { aspect-ratio: 1/1; }
+    .gallery-column.column-2 .grid-item:nth-child(odd) .grid-img { aspect-ratio: 4/5; }
+    .gallery-column.column-3 .grid-item:nth-child(even) .grid-img { aspect-ratio: 3/4; }
+    .gallery-column.column-3 .grid-item:nth-child(odd) .grid-img { aspect-ratio: 5/4; }
+}
+
+@media (max-width: 992px) {
+    .linear-grid-container { gap: 5vw; }
+    .gallery-column { gap: 5vw; margin-top: 0 !important; }
+    .gallery-column.column-2 { margin-top: 5vh !important; } /* Only slightly drop the middle column on tablet */
+}
+
+@media (max-width: 576px) {
+    .linear-grid-container {
+        flex-direction: column; /* Stack the 3 columns vertically */
+        gap: 6vw;
+    }
+    .gallery-column { gap: 6vw; margin-top: 0 !important; }
+}
+
+.grid-item {
+    width: 100%;
+    position: relative;
+    border-radius: 6px;  /* Apply radius here so overlay doesn't spill */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    overflow: hidden;    /* Contain the border-radius and overlay cleanly */
+    transition: box-shadow 0.8s ease; 
+    cursor: pointer;
+}
+
+/* Ensure the wrapper floats and takes up item space */
+.grid-floater {
+    width: 100%;
+    height: 100%;
+    animation: simpleLinearFloat 8s ease-in-out infinite alternate;
+}
+
+.float-delay-1 { animation-delay: 0s; }
+.float-delay-2 { animation-delay: 1.5s; }
+.float-delay-3 { animation-delay: 0.7s; }
+.float-delay-4 { animation-delay: 2.2s; }
+
+@keyframes simpleLinearFloat { 
+    0% { transform: translateY(0); } 
+    100% { transform: translateY(-10px); } /* very slow vertical drift, minimal movement */
+}
+
+.grid-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), filter 0.8s ease; /* Longer cinematic transition */
+}
+
+/* The dark background for the text that rises naturally */
+.grid-hover-info {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 3rem 1.5rem 1.5rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    border-radius: 0 0 6px 6px;
+    pointer-events: none;
+    text-align: left;
+}
+
+/* Dim all images gracefully when container is hovered */
+@media (hover: hover) {
+    .linear-grid-container:hover .grid-item:not(:hover) .grid-img {
+        filter: brightness(0.6) blur(2px);
+    }
+}
+
+/* Active focus */
+.grid-item:hover {
+    box-shadow: 0 15px 40px rgba(6, 9, 6, 0.8);
+}
+
+.grid-item:hover .grid-img {
+    transform: scale(1.03); /* scales beautifully inside the frame */
+    /* Restore clarity and bump brightness slightly */
+    filter: brightness(1.05) blur(0) !important;
+}
+
+.grid-item:hover .grid-hover-info {
+    opacity: 1;
+    transform: translateY(0);
+}
+/* Purged Mobile Fallback: Ensuring we NEVER collapse or column-stack per instruction. Will scale gracefully. */
+
+/* ==================
+   Support Banner Section
+=================== */
+.support-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-align: center;
+}
+
+.support-bg-container {
+    position: absolute;
+    top: -15vh; /* Extra height to allow parallax movement */
+    left: 0;
+    width: 100%;
+    height: 130vh;
+    z-index: 1;
+}
+
+.support-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
+    /* Slight desaturation and very subtle blur */
+    filter: saturate(0.8) blur(3px);
+    /* Extra slow zoom effect */
+    animation: slowZoomOutIn 30s ease-in-out infinite alternate;
+}
+
+.support-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 12, 10, 0.5); /* Elegant dark softening overlay */
+    z-index: 2;
+}
+
+/* Subtle floaty grain / atmospheric static */
+.support-grain {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+}
+
+.support-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.support-text {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+    color: #f5f5f5; /* Soft off-white */
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    max-width: 80vw;
+    letter-spacing: 0.06em;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.35); /* Soft readable drop shadow */
+}
+
+.support-btn {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.95rem;
+    letter-spacing: 0.15em;
+    color: rgba(245, 245, 245, 0.9);
+    background: transparent;
+    border: 1px solid rgba(245, 245, 245, 0.35);
+    padding: 1rem 2.8rem;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.support-btn:hover {
+    color: #fff;
+    background-color: rgba(245, 245, 245, 0.08);
+    border-color: rgba(245, 245, 245, 0.9);
+    box-shadow: 0 0 20px rgba(245, 245, 245, 0.15); /* Soft bloom glow */
+}
+
+.leaf-icon {
+    font-style: normal;
+}
+
+/* Animations for Support section entering view */
+.js-animate-support {
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity 2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s, transform 2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s;
+}
+
+.js-animate-support-delayed {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.9s, transform 2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.9s;
+}
+
+.js-animate-support.is-visible, 
+.js-animate-support-delayed.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes slowZoomOutIn {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
+}
+
+/* ==================
+   Support Modal
+=================== */
+.support-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 12, 10, 0.75); /* Dark cinematic focus */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.support-modal-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.support-modal-content {
+    background-color: #faf9f9; /* Soft, warm off-white */
+    padding: 4rem 3rem 3rem; /* Airy and spaced */
+    border-radius: 24px; /* Slightly increased */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08); /* Softer, less harsh shadow */
+    text-align: center;
+    position: relative;
+    transform: scale(0.95);
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    max-width: 90vw;
+    width: 340px;
+}
+
+.support-modal-overlay.is-open .support-modal-content {
+    transform: scale(1);
+}
+
+.support-close-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    font-weight: 300; /* Minimal thinner cross */
+    color: #888;
+    opacity: 0.4; /* Slightly faded */
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.support-close-btn:hover {
+    opacity: 0.8;
+    color: var(--color-text);
+}
+
+.qr-text-top {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.25rem; /* Slightly reduced */
+    color: var(--color-text-light);
+    margin-bottom: 1.2rem; /* Increased spacing for airy feel */
+    letter-spacing: 0.08em; /* Elegance */
+}
+
+.qr-container {
+    position: relative;
+    margin: 1.5rem auto 1rem;
+    width: 240px; /* Medium-large as requested (~240px width) */
+    height: 240px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ffffff; /* Clean white background directly behind QR */
+    border-radius: 12px;
+    padding: 1rem; /* Minimal and even padding */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05); /* Soft structural shadow */
+    box-sizing: border-box;
+}
+
+.qr-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* prevents cropping and distortion */
+    aspect-ratio: 1 / 1; /* perfectly square ratio */
+    border-radius: 4px; /* subtle framing, doesn't affect data */
+    /* Strict adherence: zero blur, opacity, or contrast filters */
+}
+
+/* Obscures the UPI ID text on the bottom of the original QR image */
+.qr-obscure-gradient {
+    display: none; /* Removing the obscure block completely to prevent scanning interference */
+}
+
+.upi-text-container {
+    font-family: var(--font-sans);
+    margin-top: 0.8rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: inline-block;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.upi-text-container:hover {
+    opacity: 0.7; /* Soft hover effect */
+}
+
+.upi-label {
+    font-size: 0.65rem;
+    font-weight: 300;
+    color: #a4aca6; /* Lighter gray, smaller emphasis */
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.upi-value {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #5d6860; /* Slightly darker for readability */
+    letter-spacing: 0.15em;
+    display: inline-block;
+}
+
+.copy-toast {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.75rem;
+    color: #fff;
+    background-color: rgba(47, 53, 49, 0.9);
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    letter-spacing: 0.05em;
+}
+
+.copy-toast.is-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
