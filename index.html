@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z6C7HLDS6F"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-Z6C7HLDS6F');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floravanta - quiet blooms, captured</title>
+    <!-- Google Fonts: Outfit for modern sans, Cormorant Garamond for elegant serif -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Outfit:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Landing Section -->
+    <section class="landing" id="parallax-section">
+        <!-- Parallax layers: Base grayscale and top color reveal -->
+        <div class="parallax-container" id="hero-wrapper">
+            <img class="parallax-image grayscale-layer" src="images/hero.jpg" alt="Floravanta hero bloom grayscale">
+            <img class="parallax-image color-layer" id="hero-color" src="images/hero.jpg"
+                alt="Floravanta hero bloom color">
+        </div>
+
+        <!-- Gradient Overlay for readability -->
+        <div class="landing-overlay"></div>
+
+        <div class="landing-content">
+            <h1 id="landing-title">FLORAVANTA</h1>
+            <p class="tagline">quiet blooms, captured</p>
+        </div>
+
+        <div class="scroll-indicator" id="scroll-indicator">scroll &darr;</div>
+    </section>
+
+    <!-- Transition Spacer with Blend -->
+    <div class="transition-blend"></div>
+
+    <!-- Cinematic Video Scroll Section -->
+    <section class="video-sequence" id="video-sequence">
+        <div class="video-sticky">
+            <video id="scroll-video" src="images/flower.mp4" muted playsinline preload="auto"></video>
+        </div>
+    </section>
+
+    <!-- Transition Spacer before Gallery -->
+    <div class="gallery-transition-blend"></div>
+
+    <!-- Minimal Cinematic Forest Section (Collage Sequence) -->
+    <section class="cinematic-forest-section" id="cinematic-forest">
+        <div class="forest-overlay"></div>
+        <!-- Interactive Environmental Fauna -->
+        <div class="fauna-container" id="fauna-container"></div>
+        <div class="linear-grid-container">
+            <!-- Column 1 -->
+            <div class="gallery-column column-1">
+                <div class="grid-item js-animate">
+                    <div class="grid-floater float-delay-1">
+                        <img src="images/floravanta-01-bloom.jpg" alt="bloom" class="grid-img" loading="lazy">
+                        <div class="grid-hover-info">
+                            <h3 class="flower-name">bloom</h3>
+                            <p class="flower-desc">a quiet unspooling in the damp morning light, reaching gracefully
+                                outward.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-item js-animate">
+                    <div class="grid-floater float-delay-4">
+                        <img src="images/floravanta-04-becoming.jpg" alt="becoming" class="grid-img" loading="lazy">
+                        <div class="grid-hover-info">
+                            <h3 class="flower-name">becoming</h3>
+                            <p class="flower-desc">the subtle transition of a bud shedding silence to speak in color.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-item js-animate">
+                    <div class="grid-floater float-delay-3">
+                        <img src="images/floravanta-07-stillness.jpg" alt="stillness" class="grid-img" loading="lazy">
+                        <div class="grid-hover-info">
+                            <h3 class="flower-name">stillness</h3>
+                            <p class="flower-desc">an arrested moment, suspended perfectly in the cool, dense air.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 2 -->
+            <div class="gallery-column column-2">
+                <div class="grid-item js-animate">
+                    <div class="grid-floater float-delay-2">
+                        <img src="images/floravanta-02-alive.jpg" alt="alive" class="grid-img" loading="lazy">
+                        <div class="grid-hover-info">
+                            <h3 class="flower-name">alive</h3>
+                            <p class="flower-desc">vibrant and breathing, anchored to the earth yet aspiring upward.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-item js-animate">
+                    <div class="grid-floater float-delay-1">
+                        <img src="images/floravanta-05-between.jpg" alt="between worlds" class="grid-img"
+                            loading="lazy">
+                        <div class="grid-hover-info">
+                            <h3 class="flower-name">between worlds</h3>
+                            <p class="flower-desc">a portal through glass and green, where the domestic meets the wild.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-item js-animate">
+                    <div class="grid-floater float-delay-4">
+                        <img src="images/floravanta-08-linger.jpg" alt="linger" class="grid-img" loading="lazy">
+                        <div class="grid-hover-info">
+                            <h3 class="flower-name">linger</h3>
+                            <p class="flower-desc">the lingering fragance, waiting patiently for twilight to fall.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 3 -->
+            <div class="gallery-column column-3">
+                <div class="grid-item js-animate">
+                    <div class="grid-floater float-delay-3">
+                        <img src="images/floravanta-03-warmth.jpg" alt="warmth" class="grid-img" loading="lazy">
+                        <div class="grid-hover-info">
+                            <h3 class="flower-name">warmth</h3>
+                            <p class="flower-desc">holding the golden hour, soft petals basking in a gentle amber glow.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-item js-animate">
+                    <div class="grid-floater float-delay-2">
+                        <img src="images/floravanta-06-quiet.jpg" alt="quiet" class="grid-img" loading="lazy">
+                        <div class="grid-hover-info">
+                            <h3 class="flower-name">quiet</h3>
+                            <p class="flower-desc">unseen corners of the undergrowth holding softly entirely still.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support Section Banner -->
+    <section class="support-section" id="support-section">
+        <div class="support-bg-container js-parallax-support">
+            <img src="images/support-bg.jpg" class="support-bg" alt="Support floral background">
+            <div class="support-overlay"></div>
+            <div class="support-grain"></div>
+        </div>
+
+        <div class="support-content">
+            <p class="support-text js-animate-support">if these quiet blooms meant something to you,<br>you can support
+                the journey <span class="leaf-icon">🌸</span></p>
+            <button class="support-btn js-animate-support-delayed" id="support-btn">support <span
+                    class="leaf-icon">🌿</span></button>
+        </div>
+    </section>
+
+    <!-- Support Modal -->
+    <div class="support-modal-overlay" id="support-modal">
+        <div class="support-modal-content" id="support-modal-content">
+            <button class="support-close-btn" id="support-close-btn" aria-label="Close modal">&times;</button>
+            <p class="qr-text-top">scan to support 🌸</p>
+            <div class="qr-container">
+                <img src="images/qr-code.png" alt="Support QR Code" class="qr-image">
+                <div class="qr-obscure-gradient"></div>
+            </div>
+            <div class="upi-text-container" id="upi-text" title="Click to copy">
+                <span class="upi-label">UPI ID:</span><br>
+                <span class="upi-value">dharshilpatil04@okicici</span>
+            </div>
+            <div class="copy-toast" id="copy-toast">copied!</div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer js-animate">
+        <p class="footer-title">floravanta</p>
+        <div class="footer-icons">
+            <div class="social-item">
+                <a href="https://instagram.com/floravanta" target="_blank" rel="noopener noreferrer"
+                    class="social-link social-ig" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                        <defs>
+                            <linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#ffb13b" />
+                                <stop offset="50%" stop-color="#bc1888" />
+                                <stop offset="100%" stop-color="#8a3ab9" />
+                            </linearGradient>
+                        </defs>
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="url(#ig-grad)"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" stroke="url(#ig-grad)"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="url(#ig-grad)"></line>
+                    </svg>
+                </a>
+                <span class="social-handle">@florovanta</span>
+            </div>
+            <div class="social-item">
+                <a href="mailto:floravanta11@gmail.com" class="social-link social-email" aria-label="Email">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                        <defs>
+                            <linearGradient id="email-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#df736b" />
+                                <stop offset="33%" stop-color="#e9be50" />
+                                <stop offset="66%" stop-color="#62a16d" />
+                                <stop offset="100%" stop-color="#6793e4" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                            stroke="url(#email-grad)"></path>
+                        <polyline points="22,6 12,13 2,6" stroke="url(#email-grad)"></polyline>
+                    </svg>
+                </a>
+                <span class="social-handle">floravanta11@gmail.com</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox Overlay -->
+    <div class="lightbox-overlay" id="lightbox">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close fullscreen">&times;</button>
+        <div class="lightbox-content">
+            <img src="" alt="" class="lightbox-img" id="lightbox-img">
+            <div class="lightbox-caption" id="lightbox-caption"></div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
