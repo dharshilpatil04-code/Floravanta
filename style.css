@@ -1230,7 +1230,7 @@ h1, h2, h3, p {
 /* ==================
    Device Performance & Responsive Overrides
 =================== */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     /* STRICT MOBILE OPTIMIZATION: Collapse scrubbing container to native viewport */
     .video-sequence {
         height: 100vh !important;
