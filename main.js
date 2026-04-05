@@ -1,3 +1,8 @@
+/* Performance and Device Capability Detection Flags */
+const isMobileDevice = window.matchMedia("(max-width: 768px)").matches || window.matchMedia("(pointer: coarse)").matches;
+const isLowPower = isMobileDevice || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 document.addEventListener("DOMContentLoaded", () => {
     initLandingAnimation();
     initIntersectionObservers();
@@ -6,7 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initSupportModal();
     initLightbox();
     initForestFauna();
-    initCustomCursor();
     initAmbientAudio();
 });
 
@@ -26,9 +30,6 @@ function initVideoScroll() {
     let currentTime = 0;
     const videoEase = 0.06; // Highly tuned fluid scrubbing tracking
 
-    let entranceY = 0;
-    let entranceOpacity = 0;
-
     function renderVideo() {
         const rect = videoSequence.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
@@ -45,35 +46,18 @@ function initVideoScroll() {
             scrollProgress = 1;
         }
 
-        // 1. Cinematic Entrance logic for video depth & fade
-        let targetOpacity = 1;
-        let targetY = 0;
+        // Entrance tracking removed to favor hardware-GPU CSS crossfade natively.
+        // Ensures the main thread focuses entirely on fluid 60fps video seeking instead of DOM repaints.
 
-        if (rect.top > 0) {
-            // Fades in entirely out of the black void as it rises
-            let fadeVal = 1 - (rect.top - viewportHeight * 0.2) / (viewportHeight * 0.8);
-            targetOpacity = Math.max(0, Math.min(1, fadeVal));
-            
-            // Moving slightly faster parallax mapping
-            targetY = (rect.top / viewportHeight) * 200; 
-        }
-
-        // Lerp entrance interpolations for guaranteed unbroken flow
-        entranceY += (targetY - entranceY) * 0.1;
-        entranceOpacity += (targetOpacity - entranceOpacity) * 0.1;
-
-        video.style.opacity = entranceOpacity;
-        const stickyInner = document.querySelector('.video-sticky');
-        if (stickyInner) stickyInner.style.transform = `translateY(${entranceY}px)`;
-
-        // 2. Video frame scrub tracking
+        // Video frame scrub tracking
         // Only manipulate time if metadata loaded
         if (video.readyState >= 1 && video.duration && !isNaN(video.duration)) {
             targetTime = scrollProgress * video.duration;
             currentTime += (targetTime - currentTime) * videoEase;
             
-            // Only update time if the change is significant enough to avoid browser seeking jank
-            if (Math.abs(currentTime - video.currentTime) > 0.03) {
+            // Lower fidelity mapping on low power devices to avoid CPU choke
+            const threshold = isLowPower ? 0.15 : 0.08;
+            if (Math.abs(currentTime - video.currentTime) > threshold) {
                 video.currentTime = currentTime;
             }
         }
@@ -207,28 +191,30 @@ function initParallax() {
     const landingContent = document.querySelector(".landing-content");
 
     // Listen to mouse movement over the container
-    section.addEventListener("mousemove", (e) => {
-        const rect = section.getBoundingClientRect();
-        
-        const xPos = (e.clientX - rect.left) / rect.width - 0.5;
-        const yPos = (e.clientY - rect.top) / rect.height - 0.5;
+    if (!isMobileDevice && !prefersReducedMotion) {
+        section.addEventListener("mousemove", (e) => {
+            const rect = section.getBoundingClientRect();
+            
+            const xPos = (e.clientX - rect.left) / rect.width - 0.5;
+            const yPos = (e.clientY - rect.top) / rect.height - 0.5;
 
-        targetX = xPos * 4; 
-        targetY = yPos * 4;
+            targetX = xPos * 4; 
+            targetY = yPos * 4;
 
-        // Mouse relative percentage for spotlight
-        spotX = ((e.clientX - rect.left) / rect.width) * 100;
-        spotY = ((e.clientY - rect.top) / rect.height) * 100;
-        
-        if (colorLayer) colorLayer.classList.add("active");
-    });
+            // Mouse relative percentage for spotlight
+            spotX = ((e.clientX - rect.left) / rect.width) * 100;
+            spotY = ((e.clientY - rect.top) / rect.height) * 100;
+            
+            if (colorLayer) colorLayer.classList.add("active");
+        });
 
-    // Subtly reset when mouse leaves
-    section.addEventListener("mouseleave", () => {
-        targetX = 0;
-        targetY = 0;
-        if (colorLayer) colorLayer.classList.remove("active");
-    });
+        // Subtly reset when mouse leaves
+        section.addEventListener("mouseleave", () => {
+            targetX = 0;
+            targetY = 0;
+            if (colorLayer) colorLayer.classList.remove("active");
+        });
+    }
 
     // Handle Scroll for vertical parallax movement
     let scrollY = 0;
@@ -420,7 +406,8 @@ function initForestFauna() {
     };
 
     const types = ['bird', 'butterfly'];
-    const maxFauna = 25;
+    // Scale fauna strictly across device capabilities
+    const maxFauna = prefersReducedMotion ? 0 : (isLowPower ? 4 : 25); 
     let activeFauna = 0;
 
     function spawnFauna(initialYPercent = null) {
@@ -537,134 +524,6 @@ function initForestFauna() {
     }
 }
 
-/* 
- * 8. Custom Bird Cursor
- * Injects a smooth custom cursor restricted purely to the Cinematic Forest sequence
- */
-function initCustomCursor() {
-    const forestSection = document.getElementById('cinematic-forest');
-    if (!forestSection) return;
-
-    // Create the cursor element and inject the image
-    const cursor = document.createElement('div');
-    cursor.className = 'custom-bird-cursor';
-    
-    const cursorImg = document.createElement('img');
-    cursorImg.src = 'images/3DE3DA8E-D659-4B67-8F86-4EAC401DB3EA.png';
-    cursorImg.alt = 'Bird cursor';
-    cursorImg.className = 'cursor-bird-img';
-    
-    cursor.appendChild(cursorImg);
-    document.body.appendChild(cursor);
-
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let currentX = mouseX;
-    let currentY = mouseY;
-    let currentRot = 0;
-    let currentSkew = 0;
-    
-    // Default lerp speed (how fast it catches up to the mouse) - severely slowed down for gliding
-    let baseEase = 0.08;
-    let currentEase = baseEase;
-    let isHoveringImage = false;
-    let isInsideForest = false;
-    
-    // Directional tracking
-    let targetScaleX = 1;
-    let currentScaleX = 1;
-
-    // Hide default cursor across the forest section using a class
-    forestSection.classList.add('has-custom-cursor');
-
-    window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-
-    // Detect if the mouse is actively inside the forest section to toggle visibility
-    forestSection.addEventListener('mouseenter', () => {
-        isInsideForest = true;
-        cursor.classList.add('is-visible');
-    });
-
-    forestSection.addEventListener('mouseleave', () => {
-        isInsideForest = false;
-        cursor.classList.remove('is-visible');
-    });
-
-    // Handle hovering over images in the gallery to slow down target latency
-    const interactables = forestSection.querySelectorAll('.grid-item');
-    interactables.forEach(item => {
-        item.addEventListener('mouseenter', () => {
-            isHoveringImage = true;
-            // The cursor slows down slightly to feel 'hesitant' or focused
-            cursorImg.classList.add('is-focused');
-        });
-        item.addEventListener('mouseleave', () => {
-            isHoveringImage = false;
-            cursorImg.classList.remove('is-focused');
-        });
-    });
-
-    function renderCursor() {
-        if (!isInsideForest) {
-            requestAnimationFrame(renderCursor);
-            return;
-        }
-
-        // Adjust tracking speed based on hover state (much looser for flying)
-        const targetEase = isHoveringImage ? 0.03 : 0.08;
-        currentEase += (targetEase - currentEase) * 0.1;
-
-        // Calculate velocity for rotation and trailing
-        const dx = mouseX - currentX;
-        const dy = mouseY - currentY;
-        
-        currentX += dx * currentEase;
-        currentY += dy * currentEase;
-        
-        // Gentle organic bobbing independent of the mouse
-        const floatY = Math.sin(Date.now() * 0.0025) * 12;
-
-        // Flip logic with strong threshold to completely eliminate flipping jitter based on micro-movements
-        // Maintains current direction unless a clear pull in the opposite direction happens
-        if (dx > 8) {
-            targetScaleX = 1; 
-        } else if (dx < -8) {
-            targetScaleX = -1;
-        }
-        
-        // Very smooth easing when changing direction so it physically turns instead of snapping
-        currentScaleX += (targetScaleX - currentScaleX) * 0.05;
-
-        // Visual hover focus scale
-        const focusScale = isHoveringImage ? 0.85 : 1;
-
-        // Apply flip and scale cleanly on the inner image directly
-        cursorImg.style.transform = `translate(-50%, -50%) scale(${currentScaleX * focusScale}, ${focusScale})`;
-
-        // Dynamic Flight Rotation Mechanics
-        // Very subtle tilt mapping to horizontal drag only, avoiding chaotic pitching
-        const targetRot = dx * 0.1;
-        currentRot += (targetRot - currentRot) * 0.05; 
-
-        // Strictly cap rotation to keep it stable 
-        const clampedRot = Math.max(-12, Math.min(12, currentRot));
-
-        // Skew provides flowing drag on horizontal movement (subtly)
-        const targetSkew = Math.max(-8, Math.min(8, -dx * 0.05));
-        currentSkew += (targetSkew - currentSkew) * 0.05;
-
-        // Apply smooth container positioning
-        cursor.style.transform = `translate3d(${currentX}px, ${currentY + floatY}px, 0) rotate(${clampedRot}deg) skewX(${currentSkew}deg)`;
-
-        requestAnimationFrame(renderCursor);
-    }
-    
-    // Start loop
-    renderCursor();
-}
 
 /* 
  * 9. Ambient Audio System
@@ -674,6 +533,16 @@ function initAmbientAudio() {
     const audio = new Audio('images/NewProject.mp3');
     audio.loop = true;
     audio.volume = 0; // Starts silent until interaction fades it in seamlessly
+    
+    // Append to DOM to prevent browsers from suspending or garbage collecting off-DOM audio
+    audio.style.display = 'none';
+    document.body.appendChild(audio);
+
+    // Force explicit restart on end just in case native looping drops
+    audio.addEventListener('ended', () => {
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+    });
     
     let isPlaying = false;
     let targetVolume = 0.05; // Base low volume roughly 5% across the site
