@@ -1231,19 +1231,41 @@ h1, h2, h3, p {
    Device Performance & Responsive Overrides
 =================== */
 @media (max-width: 768px) {
-    /* Downgrade heavy drop-shadows on video while scrubbing to save massive repaints */
+    /* STRICT MOBILE OPTIMIZATION: Collapse scrubbing container to native viewport */
+    .video-sequence {
+        height: 100vh !important;
+        height: 100dvh !important;
+    }
+
+    /* Downgrade heavy drop-shadows on video to save massive repaints */
     #scroll-video {
-        filter: contrast(1.15) saturate(1.1) brightness(1.05) !important;
+        filter: contrast(1.15) !important; /* Stripped heavy saturate and dropshadow */
     }
     
-    /* Disable the 30-second background repaint loop on mobile to preserve battery */
-    .support-bg {
+    /* Disable all infinite/continuous background repaints */
+    .support-bg, .grid-floater, .parallax-image {
         animation: none !important;
     }
     
-    /* Freeze subtle floating layers on limited viewports to avoid jitter */
-    .grid-floater {
-        animation: none !important;
+    /* Remove gallery layout shadow repaints and expensive blur filters entirely */
+    .grid-item {
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important; /* lightweight static shadow */
+        transition: transform 0.3s ease, opacity 0.3s ease !important;
+    }
+    .grid-item:hover {
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important; /* prevent hover repaints */
+    }
+    .grid-img {
+        transition: transform 0.3s ease, opacity 0.3s ease !important;
+        filter: brightness(0.9) !important; /* Static flat dim, no blur or interactive recalculations */
+    }
+    .grid-item:hover .grid-img {
+        transform: scale(1) translateZ(0) !important;
+        filter: brightness(0.9) !important; 
+    }
+    .linear-grid-container:hover .grid-item:not(:hover) .grid-img {
+        filter: brightness(0.9) !important; /* Cancel the JS/CSS dimming spread entirely */
+        opacity: 1 !important;
     }
 }
 
