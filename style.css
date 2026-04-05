@@ -49,6 +49,7 @@ h1, h2, h3, p {
 =================== */
 .landing {
     height: 100vh;
+    height: 100dvh;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -196,21 +197,35 @@ h1, h2, h3, p {
 .transition-blend {
     height: 40vh;
     width: 100%;
-    /* Soft fade: top -> transparent, bottom -> black */
-    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000 100%);
+    /* Clean solid color interpolation from landing bg to video bg */
+    background: linear-gradient(to bottom, #f7f7f7 0%, #000000 100%);
     position: relative;
     z-index: 5;
     pointer-events: none;
-    margin-bottom: -1px; /* seamless connection to video-sequence */
+    margin-bottom: -1px;
 }
 
 /* ==================
    Video Sequence
 =================== */
 .video-sequence {
+    position: relative;
     height: 350vh; /* Adds scroll depth to scrub the video fluidly */
     width: 100%;
     background-color: #000;
+}
+
+/* Seamless crossfade from landing */
+.video-sequence::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 25vh;
+    background: linear-gradient(to bottom, #f7f7f7 0%, rgba(247, 247, 247, 0) 100%);
+    pointer-events: none;
+    z-index: 10;
 }
 
 .video-sticky {
@@ -218,10 +233,24 @@ h1, h2, h3, p {
     top: 0;
     width: 100%;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* Cinematic Glow and Vignette (Macro Style and Deep Black Background) */
+.video-sticky::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.04) 0%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 1) 100%);
+    pointer-events: none;
+    z-index: 2;
 }
 
 #scroll-video {
@@ -229,22 +258,21 @@ h1, h2, h3, p {
     height: 100%;
     object-fit: cover;
     object-position: center;
+    /* Simulated 4K Sharpness, Contrast, and Saturation Boost */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    filter: contrast(1.15) saturate(1.1) brightness(1.05) drop-shadow(0 0 10px rgba(0,0,0,0.5));
+    transform: translateZ(0); /* Hardware acceleration for smooth output */
 }
 
 /* ==================
    Immersive Parallax Gallery (Forest Theme)
 =================== */
 .gallery-transition-blend {
-    height: 40vh; /* Lengthened for a luxurious slow fade */
+    height: 40vh;
     width: 100%;
-    /* Soft cinematic gradient: slightly light/transparent -> deep shadow -> dark forest green */
-    background: linear-gradient(
-        to bottom,
-        rgba(255, 251, 251, 0.05) 0%,
-        rgba(6, 9, 6, 0.2) 40%,
-        rgba(6, 9, 6, 0.8) 75%,
-        #060906 100%
-    );
+    /* Clean solid color interpolation from video black to forest dark green */
+    background: linear-gradient(to bottom, #000000 0%, #060906 100%);
     position: relative;
     z-index: 5;
     pointer-events: none;
@@ -465,65 +493,7 @@ h1, h2, h3, p {
     max-width: 80%;
 }
 
-/* Highly intentional drifting wave layout (Desktop only) */
-@media (min-width: 768px) {
-    /* 1. bloom: slightly left */
-    .pos-1 {
-        transform: translateX(-10vw) rotate(-1.5deg) translateY(calc(var(--entry-y) + var(--parallax-y, 0px))) scale(var(--entry-s));
-        margin-top: 5vh;
-    }
-    .pos-1 .gallery-img { max-width: 480px; }
-
-    /* 2. alive: right */
-    .pos-2 {
-        transform: translateX(15vw) rotate(2deg) translateY(calc(var(--entry-y) + var(--parallax-y, 0px))) scale(var(--entry-s));
-        margin-top: -5vh; /* Tuck it closer */
-    }
-    .pos-2 .gallery-img { max-width: 400px; }
-
-    /* 3. warmth: center focal */
-    .pos-3 {
-        transform: translateX(2vw) rotate(-0.5deg) translateY(calc(var(--entry-y) + var(--parallax-y, 0px))) scale(var(--entry-s));
-        margin-top: 5vh;
-    }
-    .pos-3 .gallery-img { max-width: 600px; }
-
-    /* 4. becoming: left (more) sweeping */
-    .pos-4 {
-        transform: translateX(-18vw) rotate(-2.5deg) translateY(calc(var(--entry-y) + var(--parallax-y, 0px))) scale(var(--entry-s));
-        margin-top: 8vh;
-    }
-    .pos-4 .gallery-img { max-width: 420px; }
-
-    /* 5. between: center largest focal pause */
-    .pos-5 {
-        transform: translateX(0) rotate(0) translateY(calc(var(--entry-y) + var(--parallax-y, 0px))) scale(var(--entry-s));
-        margin-top: 15vh;
-        margin-bottom: 12vh;
-    }
-    .pos-5 .gallery-img { max-width: 850px; }
-
-    /* 6. quiet: right recovery sweep */
-    .pos-6 {
-        transform: translateX(12vw) rotate(1.5deg) translateY(calc(var(--entry-y) + var(--parallax-y, 0px))) scale(var(--entry-s));
-        margin-top: 5vh;
-    }
-    .pos-6 .gallery-img { max-width: 480px; }
-
-    /* 7. stillness: slightly left */
-    .pos-7 {
-        transform: translateX(-8vw) rotate(-1deg) translateY(calc(var(--entry-y) + var(--parallax-y, 0px))) scale(var(--entry-s));
-        margin-top: 2vh;
-    }
-    .pos-7 .gallery-img { max-width: 500px; }
-
-    /* 8. linger: center anchor */
-    .pos-8 {
-        transform: translateX(0) rotate(0.5deg) translateY(calc(var(--entry-y) + var(--parallax-y, 0px))) scale(var(--entry-s));
-        margin-top: 10vh;
-    }
-    .pos-8 .gallery-img { max-width: 560px; }
-}
+/* Legacy layout removed */
 
 /* Image Hover interaction for pointers */
 @media (hover: hover) and (pointer: fine) {
@@ -562,52 +532,6 @@ h1, h2, h3, p {
     }
 }
 
-/* ==================
-   Custom Bird Cursor
-=================== */
-/* Hide the default cursor when entering the cinematic forest */
-.has-custom-cursor {
-    cursor: none;
-}
-.has-custom-cursor * {
-    /* Enforce hidden cursor across all children except where interactive overrides specifically need testing */
-    cursor: none !important; 
-}
-
-.custom-bird-cursor {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 85px; /* Significantly larger but still refined (approx 2.5x) */
-    height: 85px;
-    pointer-events: none; /* Prevents cursor from intercepting clicks */
-    z-index: 9999;
-    opacity: 0;
-    transform-origin: center center;
-    transition: opacity 0.4s ease;
-    mix-blend-mode: normal;
-    will-change: transform;
-}
-
-.custom-bird-cursor.is-visible {
-    opacity: 1;
-}
-
-.cursor-bird-img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
-    transition: transform 0.4s ease;
-    /* Move center to cursor point */
-    transform: translate(-50%, -50%);
-}
-
-.cursor-bird-img.is-focused {
-    /* An elegant visual shift when hovering over a gallery image */
-    transform: translate(-50%, -50%) scale(0.85);
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
-}
 
 
 /* ==================
@@ -648,6 +572,14 @@ h1, h2, h3, p {
     cursor: pointer;
     transition: color 0.3s ease;
     z-index: 2010;
+    padding: 0.5rem; /* Larger tap target */
+}
+
+@media (max-width: 767px) {
+    .lightbox-close {
+        top: 1rem;
+        right: 1rem;
+    }
 }
 
 .lightbox-close:hover {
@@ -723,6 +655,15 @@ h1, h2, h3, p {
     width: 160px; /* Equal width forces icons to balance perfectly across the center */
 }
 
+@media (max-width: 480px) {
+    .footer-icons {
+        gap: 1.5rem;
+    }
+    .social-item {
+        width: 140px;
+    }
+}
+
 .social-link {
     transition: transform 0.4s ease, color 0.4s ease, filter 0.4s ease;
     display: flex;
@@ -790,6 +731,7 @@ h1, h2, h3, p {
     position: relative;
     width: 100%;
     min-height: 100vh;
+    min-height: 100dvh;
     padding: 15vh 0;
     display: flex;
     justify-content: center;
@@ -800,6 +742,19 @@ h1, h2, h3, p {
     /* Keeps the image still while scrolling for a depth effect */
     background-attachment: fixed;
     overflow: hidden;
+}
+
+/* Seamless crossfade from video sequence */
+.cinematic-forest-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 25vh;
+    background: linear-gradient(to bottom, #000000 0%, rgba(0, 0, 0, 0) 100%);
+    pointer-events: none;
+    z-index: 10;
 }
 
 .forest-overlay {
@@ -887,8 +842,8 @@ h1, h2, h3, p {
 .float-delay-4 { animation-delay: 2.2s; }
 
 @keyframes simpleLinearFloat { 
-    0% { transform: translateY(0); } 
-    100% { transform: translateY(-10px); } /* very slow vertical drift, minimal movement */
+    0% { transform: translate3d(0, 0, 0); } 
+    100% { transform: translate3d(0, -10px, 0); } /* Promoted to dedicated hardware composite layer for 60fps */
 }
 
 .grid-img {
@@ -913,22 +868,24 @@ h1, h2, h3, p {
     text-align: left;
 }
 
-/* Dim all images gracefully when container is hovered */
+/* Dim all images gracefully when container is hovered without expensive blur repaints */
 @media (hover: hover) {
     .linear-grid-container:hover .grid-item:not(:hover) .grid-img {
-        filter: brightness(0.6) blur(2px);
+        filter: brightness(0.55);
+        opacity: 0.8;
     }
 }
 
 /* Active focus */
 .grid-item:hover {
     box-shadow: 0 15px 40px rgba(6, 9, 6, 0.8);
+    z-index: 5; /* Stabilize rendering order */
 }
 
 .grid-item:hover .grid-img {
-    transform: scale(1.03); /* scales beautifully inside the frame */
-    /* Restore clarity and bump brightness slightly */
-    filter: brightness(1.05) blur(0) !important;
+    transform: scale(1.03) translateZ(0); /* scales inside frame with forced GPU acceleration */
+    filter: brightness(1.05) !important;
+    opacity: 1 !important;
 }
 
 .grid-item:hover .grid-hover-info {
@@ -938,18 +895,50 @@ h1, h2, h3, p {
 /* Purged Mobile Fallback: Ensuring we NEVER collapse or column-stack per instruction. Will scale gracefully. */
 
 /* ==================
+   Cinematic Transition
+=================== */
+.cinematic-transition-blend {
+    position: relative;
+    width: 100%;
+    height: 40vh;
+    /* Smooth, pure color transition revealing the background beneath */
+    background: linear-gradient(
+        to bottom,
+        rgba(6, 9, 6, 1) 0%,
+        rgba(6, 9, 6, 0) 100%
+    );
+    margin-bottom: -15vh;
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* ==================
    Support Banner Section
 =================== */
 .support-section {
     position: relative;
     width: 100%;
     height: 100vh;
+    height: 100dvh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     text-align: center;
+}
+
+/* Seamless crossfade from forest gallery */
+.support-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 25vh;
+    background: linear-gradient(to bottom, #060906 0%, rgba(6, 9, 6, 0) 100%);
+    pointer-events: none;
+    z-index: 10;
 }
 
 .support-bg-container {
@@ -1104,6 +1093,14 @@ h1, h2, h3, p {
     transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
     max-width: 90vw;
     width: 340px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+    .support-modal-content {
+        padding: 3rem 1.5rem 2rem;
+        width: 90vw;
+    }
 }
 
 .support-modal-overlay.is-open .support-modal-content {
@@ -1121,9 +1118,16 @@ h1, h2, h3, p {
     color: #888;
     opacity: 0.4; /* Slightly faded */
     cursor: pointer;
-    padding: 0;
+    padding: 0.5rem; /* Enlarge touch target */
     line-height: 1;
     transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+@media (max-width: 480px) {
+    .support-close-btn {
+        top: 0.5rem;
+        right: 0.5rem;
+    }
 }
 
 .support-close-btn:hover {
@@ -1221,4 +1225,35 @@ h1, h2, h3, p {
 .copy-toast.is-visible {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+}
+
+/* ==================
+   Device Performance & Responsive Overrides
+=================== */
+@media (max-width: 768px) {
+    /* Downgrade heavy drop-shadows on video while scrubbing to save massive repaints */
+    #scroll-video {
+        filter: contrast(1.15) saturate(1.1) brightness(1.05) !important;
+    }
+    
+    /* Disable the 30-second background repaint loop on mobile to preserve battery */
+    .support-bg {
+        animation: none !important;
+    }
+    
+    /* Freeze subtle floating layers on limited viewports to avoid jitter */
+    .grid-floater {
+        animation: none !important;
+    }
+}
+
+/* Global Accessibility & Low-Power Hard Override */
+@media (prefers-reduced-motion: reduce) {
+    .support-bg,
+    .parallax-image,
+    .grid-floater,
+    .fauna-item,
+    .gallery-item-inner {
+        animation: none !important;
+    }
 }
