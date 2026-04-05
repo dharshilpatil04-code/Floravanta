@@ -26,6 +26,16 @@ function initVideoScroll() {
 
     if (!videoSequence || !video) return;
 
+    // Strict Mobile Optimization: Completely disable CPU-heavy scroll-scrubbing. Use native autoplay.
+    if (isLowPower) {
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = true;
+        video.setAttribute('playsinline', ''); // Ensuring it works on iOS Safari
+        video.play().catch(() => {});
+        return;
+    }
+
     let targetTime = 0;
     let currentTime = 0;
     const videoEase = 0.06; // Highly tuned fluid scrubbing tracking
@@ -393,6 +403,9 @@ function initLightbox() {
  * Spawns animated birds and butterflies smoothly floating through the cinematic gallery
  */
 function initForestFauna() {
+    // Strict Mobile Optimization: Gut fauna generation entirely on limited devices to save extreme DOM repaints
+    if (isLowPower || prefersReducedMotion) return;
+
     const container = document.getElementById('fauna-container');
     if (!container) return;
 
@@ -530,6 +543,9 @@ function initForestFauna() {
  * Seamlessly loops an ambient background track with dynamic lerped volume
  */
 function initAmbientAudio() {
+    // Strict Mobile Optimization: Browsers throttle un-focused loops and auto-audio. Abort memory allocation immediately.
+    if (isLowPower) return;
+
     const audio = new Audio('images/NewProject.mp3');
     audio.loop = true;
     audio.volume = 0; // Starts silent until interaction fades it in seamlessly
