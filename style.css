@@ -496,7 +496,7 @@ h1, h2, h3, p {
 /* Legacy layout removed */
 
 /* Image Hover interaction for pointers */
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) {
     .gallery-figure:hover .gallery-img {
         filter: grayscale(0) contrast(1.05);
         transform: scale(1.04); /* Subtle, elegant scale */
@@ -1230,7 +1230,7 @@ h1, h2, h3, p {
 /* ==================
    Device Performance & Responsive Overrides
 =================== */
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
     /* STRICT MOBILE OPTIMIZATION: Collapse scrubbing container to native viewport */
     .video-sequence {
         height: 100vh !important;
