@@ -1,6 +1,6 @@
 /* Performance and Device Capability Detection Flags */
-const isMobileDevice = window.matchMedia("(max-width: 1024px)").matches || window.matchMedia("(pointer: coarse)").matches;
-const isLowPower = isMobileDevice || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+const isMobileDevice = window.matchMedia("(max-width: 768px)").matches;
+const isLowPower = isMobileDevice || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2);
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 document.addEventListener("DOMContentLoaded", () => {
